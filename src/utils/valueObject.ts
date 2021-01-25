@@ -1,18 +1,13 @@
 import { shallowEqual } from "shallow-equal-object";
 
-export interface ValueObjectProps {
-	[index: string]: any;
-}
-export abstract class ValueObject<T extends ValueObjectProps> {
-  public readonly props: T;
-
-  constructor(props: T) {
-    this.props = Object.freeze(props);
+export class ValueObject<Props extends {[index: string]: any}> {
+  public props: Readonly<Props>
+  constructor(props:Props){
+    this.props = props;
   }
-
-  public equals(vo?: ValueObject<T>): boolean {
-    if (vo === null || vo === undefined) return false;
-    if (vo.props === undefined) return false;
-    return shallowEqual(this.props, vo.props);
-	}
+  public equals(object?: ValueObject<Props>): boolean {
+    if (object === null || object === undefined) return false;
+    if (object.props === undefined) return false;
+    return shallowEqual(this.props, object.props);
+  }
 }

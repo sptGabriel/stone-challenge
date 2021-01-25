@@ -1,26 +1,30 @@
+import { invalidEmailERROR } from "./appErrorHandler";
 import { Either, left, right } from "./utils/either";
 import { isEmail } from "./utils/isEmail";
 import { ValueObject } from "./utils/valueObject";
 
 export interface IEmailProps {
-  value: string;
+  address: string;
 }
-
 export class Email extends ValueObject<IEmailProps> {
-  get value(): string {
-    return this.props.value;
+  get Address(): string {
+    return this.props.address;
   }
 
-  private constructor(props: IEmailProps) {
-    super(props);
+  private constructor({ address }: IEmailProps) {
+    super({ address });
   }
 
   private static isEmail(email: string) {
     return isEmail(email);
   }
 
-  public static create(email: string): Either<any, Email> {
-    if (!this.isEmail(email)) return left(`any`);
-    return right(new Email({ value: email.toLowerCase() }));
+  public static build({
+    address,
+  }: IEmailProps): Either<any, { email: Email; message: string }> {
+    if (!this.isEmail(address)) return left(invalidEmailERROR(address));
+    const domainEmail = new Email({ address: address.toLowerCase() });
+    console.log({ email: domainEmail.props, message: `Email has been created` })
+    return right({ email: domainEmail, message: `Email has been created` });
   }
 }

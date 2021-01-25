@@ -1,27 +1,53 @@
-import { emailAlreadyAddedERROR, invalidEmailERROR } from "./appErrorHandler";
+import { emailAlreadyAddedERROR } from "./appErrorHandler";
+import { Email } from "./email";
 import { Item } from "./item";
-import { logger } from "./loggerProvider";
-import { Either, left, right } from "./utils/either";
-import { isEmail } from "./utils/isEmail";
+import { formatter } from "./utils/currencyBR";
 
+interface ChallengerProps {
+  itens: Item[];
+  emails: Email[];
+}
 //here is challenge class
-export class StoneChallenger {
-  private itens: Item[] = [];
-  private emails: string[] = [];
+export class StoneChallenge {
+  private static instance: StoneChallenge;
+  public readonly itens: Item[] = [];
+  public readonly emails: string[] = [];
 
-  public addEmail(email: string) {
-    if (!isEmail(email)) return left(invalidEmailERROR(email));
-    if (this.emails.includes(email)) return left(emailAlreadyAddedERROR(email));
-    this.emails.push(email);
-    return right({email, message: `Email has been added to email list`});
+  static getInstance(): StoneChallenge {
+    if (!StoneChallenge.instance)
+      StoneChallenge.instance = new StoneChallenge();
+    return StoneChallenge.instance;
+  }
+
+  public addEmail(email: Email) {
+    if (!(email instanceof Email)) {
+      return console.error({
+        error: `Invalid Email Type`,
+        message: `Please provide a valid email`,
+        data: email,
+      });
+    }
+    if (this.emails.includes(email.Address))
+      return console.error(emailAlreadyAddedERROR(email.Address));
+    this.emails.push(email.Address);
+    console.log({
+      address: email.Address,
+      message:
+        "The email address was successfully added to the challenge email list",
+    });
   }
 
   public addItem(item: Item) {
-    if (!(item instanceof Item)) {
-      return left({ message: `Invalid Item`, data: item });
-    }
+    if(!(item instanceof Item)) return console.error({
+      error: `Invalid Item Type`,
+      message: `Please provide a valid item`,
+      data: item,
+    })
     this.itens.push(item);
-    return right({item, message: `Item has been added to item list`});
+    console.log({
+      item: item.props,
+      message: "The item was successfully added to the challenge item list",
+    });
   }
 
   public get Itens() {
@@ -52,6 +78,6 @@ export class StoneChallenger {
         excess--;
       }
     }
-    return { ValuePerEmail: result, total };
+    return { ValuePerEmail: result, total, R$: formatter.format(total / 100) };
   }
 }

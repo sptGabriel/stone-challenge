@@ -1,44 +1,42 @@
-interface ErrorConfig {
-  error: string
-  message: string;
-}
-
-export const invalidEmailERROR = (email: string): ErrorConfig => {
+export const invalidEmailERROR = (email: string): any => {
   return {
     error: "EmailFormatERROR",
-    message: `This Email: ${email}, Please provide a valid email`,
+    message: `Please provide a valid email`,
+    data: email
   };
 };
 export const emailAlreadyAddedERROR = (email: string): any => {
   return {
     error: "EmailAlreadyExists",
-    message: `This Email address: ${email}  already exists.`,
+    message: `Email address already exists.`,
+    data: email
   };
 };
 export const emptyListError = (listname: string, data: any): any => {
   return {
     error: `${listname.toLowerCase()}ERROR`,
-    message: `The ${listname.toLowerCase()} list provided is empty`,
+    message: `The list provided is empty`,
+    data
   };
 };
 export const invalidItemNAMEERROR = (data: any): any => {
   return {
     error: "ItemNameERROR",
     message: `Please provide a valid item name`,
-    item: data,
+    data,
   };
 };
 export const invalidItemQuantityERROR = (data: any): any => {
   return {
     error: "QuantityERROR",
     message: `Please provide a valid item quantity`,
-    item: data,
+    data,
   };
 };
 export const invalidPriceERROR = (data: any): any  => {
   return {
     error: "PriceERROR",
     message: `Please provide a valid item price`,
-    item: data
+    data
   };
 };
