@@ -5,7 +5,7 @@ import { Either } from "./utils/either";
 
 //itens array
 const itensData: any = [
-  { name: "AOC", price: 1111, quantity: 30 },
+  { name: "AOC", price: -11111, quantity: 30 },
   { name: "ROG", price: 7550, quantity: 40 },
   { name: "MSI", price: 7550, quantity: 50 },
 ];

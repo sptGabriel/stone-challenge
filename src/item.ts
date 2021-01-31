@@ -2,6 +2,7 @@ import {
   invalidItemNAMEERROR,
   invalidItemQuantityERROR,
   invalidPriceERROR,
+  negativeNumber,
 } from "./appErrorHandler";
 import { left, right } from "./utils/either";
 import { isNumber } from "./utils/isNumber";
@@ -26,6 +27,7 @@ export class Item extends ValueObject<ItemProps> {
   }
 
   public static build(item: ItemProps) {
+    if(item.price < 0 || item.quantity < 0) return left(negativeNumber(item));
     if (!isString(item.name)) return left(invalidItemNAMEERROR(item));
     if (!isNumber(item.quantity)) return left(invalidItemQuantityERROR(item));
     if (!isNumber(item.price)) return left(invalidPriceERROR(item));

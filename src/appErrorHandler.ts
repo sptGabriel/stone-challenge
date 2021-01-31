@@ -40,3 +40,10 @@ export const invalidPriceERROR = (data: any): any  => {
     data
   };
 };
+export const negativeNumber = (data: any): any  => {
+  return {
+    error: "NegativeERROR",
+    message: `Please provide a positive number`,
+    data
+  };
+};
