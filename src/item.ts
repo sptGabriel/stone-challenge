@@ -16,14 +16,37 @@ export interface ItemProps {
   price: number;
   quantity: number;
 }
+export interface IItem {
+  Name: string;
+  Price: number;
+  Quantity: number;
+}
 // here is my item domain
-export class Item extends ValueObject<ItemProps> {
-  private constructor({ name, quantity, price }: ItemProps) {
-    super({ name, quantity, price });
+export class Item implements IItem{
+  private name: string;
+  private price: number;
+  private quantity: number;
+
+  private constructor({name,quantity,price}: ItemProps) {
+    this.name = name;
+    this.price = price;
+    this.quantity = quantity
+  }
+
+  public get Name(): string {
+    return this.name;
+  }
+  
+  public get Price(): number {
+    return this.price;
+  }
+
+  public get Quantity(): number {
+    return this.quantity;
   }
 
   public get total() {
-    return Number(this.props.price) * this.props.quantity;
+    return Number(this.price) * this.quantity;
   }
 
   public static build(item: ItemProps) {

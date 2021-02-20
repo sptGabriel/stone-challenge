@@ -47,3 +47,11 @@ export const negativeNumber = (data: any): any  => {
     data
   };
 };
+export const invalidProductERROR = (data: any): any => {
+  return {
+    error: "ProductERROR",
+    message: `Please provide a valid product`,
+    data
+  };
+};
+

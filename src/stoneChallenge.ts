@@ -1,4 +1,8 @@
-import { emailAlreadyAddedERROR } from "./appErrorHandler";
+import {
+  emailAlreadyAddedERROR,
+  invalidEmailERROR,
+  invalidProductERROR,
+} from "./appErrorHandler";
 import { Email } from "./email";
 import { Item } from "./item";
 import { formatter } from "./utils/currencyBR";
@@ -7,7 +11,7 @@ interface ChallengerProps {
   itens: Item[];
   emails: Email[];
 }
-//here is challenge class
+
 export class StoneChallenge {
   private static instance: StoneChallenge;
   public readonly itens: Item[] = [];
@@ -21,14 +25,11 @@ export class StoneChallenge {
 
   public addEmail(email: Email) {
     if (!(email instanceof Email)) {
-      return console.error({
-        error: `Invalid Email Type`,
-        message: `Please provide a valid email`,
-        data: email,
-      });
+      return console.error(invalidEmailERROR(email));
     }
-    if (this.emails.includes(email.Address))
+    if (this.emails.includes(email.Address)) {
       return console.error(emailAlreadyAddedERROR(email.Address));
+    }
     this.emails.push(email.Address);
     console.log({
       address: email.Address,
@@ -38,14 +39,12 @@ export class StoneChallenge {
   }
 
   public addItem(item: Item) {
-    if(!(item instanceof Item)) return console.error({
-      error: `Invalid Item Type`,
-      message: `Please provide a valid item`,
-      data: item,
-    })
+    if (!(item instanceof Item)) {
+      return console.error(invalidProductERROR(item));
+    }
     this.itens.push(item);
     console.log({
-      item: item.props,
+      item,
       message: "The item was successfully added to the challenge item list",
     });
   }
@@ -60,13 +59,13 @@ export class StoneChallenge {
 
   public calculate() {
     // get total value from itens
-    const total = this.itens
+    const amount = this.itens
       .map((item) => item.total)
       .reduce((sum, current) => sum + current);
     //  resto inteiro da divisão
-    let excess = total % this.emails.length;
+    let excess = amount % this.emails.length;
     // get value per email
-    const valuePerEmail = (total - excess) / this.emails.length;
+    const valuePerEmail = (amount - excess) / this.emails.length;
     // key-value pair
     const result: { [email: string]: number } = {};
     // for of  to email key and price
@@ -78,6 +77,10 @@ export class StoneChallenge {
         excess--;
       }
     }
-    return { ValuePerEmail: result, total, R$: formatter.format(total / 100) };
+    return {
+      ValuePerEmail: result,
+      amount,
+      R$: formatter.format(amount / 100),
+    };
   }
 }
